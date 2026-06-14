@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Mis 9 Años! 🐾✨</title>
+    <!-- Tailwind CSS para el diseño ágil y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes ultra tiernas y divertidas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Grandstander:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --rosa-intenso: #ff6b9d;
+            --rosa-medio: #ff9ebb;
+            --rosa-suave: #fff0f3;
+            --amarillo-brillo: #fff3a1;
+            --celeste-cielo: #e3fafc;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(180deg, var(--rosa-suave) 0%, #ffeef2 30%, var(--celeste-cielo) 70%, #fff6e3 100%);
+            color: #5d464e;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar personalizado súper tierno */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--rosa-suave);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--rosa-medio);
+            border-radius: 20px;
+            border: 3px solid var(--rosa-suave);
+        }
+
+        /* Animación de flotar y balanceo para elementos decorativos */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes path-dash {
+            to {
+                stroke-dashoffset: -40;
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .pulse {
+            animation: pulse-slow 3s ease-in-out infinite;
+        }
+
+        /* Estilo para el ovillo de lana que sigue al mouse (solo escritorios) */
+        #yarn-cursor {
+            pointer-events: none;
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            #yarn-cursor {
+                display: block;
+            }
+        }
+
+        /* Burbujas interactivas al hacer click */
+        .click-bubble {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            background: rgba(255, 158, 187, 0.4);
+            animation: blow-bubble 1s ease-out forwards;
+        }
+
+        @keyframes blow-bubble {
+            0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%); }
+            100% { width: 80px; height: 80px; opacity: 0; transform: translate(-50%, -50%); }
+        }
+
+        /* Estilo para los textos gigantes con relieve */
+        .text-3d {
+            text-shadow: 
+                2px 2px 0px #fff,
+                4px 4px 0px var(--rosa-medio),
+                6px 6px 10px rgba(255, 107, 157, 0.3);
+        }
+
+        /* Contenedor de la cuerda que sostiene los globos */
+        .hanging-string {
+            stroke: #ffccd8;
+            stroke-dasharray: 4,4;
+        }
+
+        /* */
+        /* Efecto Scrapbook para Fotos Polaroid */
+        .polaroid-frame {
+            background: white;
+            padding: 12px 12px 24px 12px;
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.15);
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .polaroid-frame:hover {
+            transform: scale(1.08) rotate(0deg) translateY(-10px) !important;
+            box-shadow: 0 15px 30px rgba(255, 107, 157, 0.3);
+            z-index: 30;
+        }
+
+        /* Cinta adhesiva decorativa para las fotos */
+        .washi-tape {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 70px;
+            height: 22px;
+            background-color: rgba(255, 158, 187, 0.6);
+            backdrop-filter: blur(2px);
+            border-left: 2px dashed rgba(255, 255, 255, 0.5);
+            border-right: 2px dashed rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        /* Modal / Zoom de fotos */
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- Ovillo de lana interactivo que sigue al cursor del mouse -->
+    <div id="yarn-cursor">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+            <circle cx="50" cy="50" r="35" fill="#ff6b9d" />
+            <path d="M25,35 Q40,15 65,25 Q85,40 75,65 Q60,85 35,75 Q15,60 25,35 Z" fill="none" stroke="#fff" stroke-width="4" />
+            <path d="M30,50 Q50,30 70,50" fill="none" stroke="#fff" stroke-width="4" />
+            <path d="M50,30 Q30,50 50,70" fill="none" stroke="#fff" stroke-width="4" />
+            <!-- Hilo suelto colgando -->
+            <path d="M75,65 Q90,80 85,95 Q80,105 95,100" fill="none" stroke="#ff6b9d" stroke-width="4" stroke-linecap="round" />
+        </svg>
+    </div>
+
+    <!-- Elementos Decorativos de Fondo Flotantes por toda la página -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <!-- Nubes grandes e interactivas -->
+        <div class="absolute top-[8%] left-[-5%] w-60 h-28 bg-white rounded-full opacity-60 filter blur-sm floating" style="animation-delay: 0s;"></div>
+        <div class="absolute top-[25%] right-[-10%] w-80 h-36 bg-white rounded-full opacity-50 filter blur-sm floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-[50%] left-[-10%] w-96 h-40 bg-white rounded-full opacity-40 filter blur-sm floating" style="animation-delay: 4s;"></div>
+        <div class="absolute top-[75%] right-[-5%] w-72 h-32 bg-white rounded-full opacity-50 filter blur-sm floating" style="animation-delay: 1s;"></div>
+
+        <!-- Brillos y estrellas que titilan -->
+        <span class="absolute top-[12%] right-[15%] text-yellow-300 text-3xl floating" style="animation-delay: 0.5s;">✨</span>
+        <span class="absolute top-[40%] left-[8%] text-yellow-200 text-4xl floating" style="animation-delay: 1.5s;">🌸</span>
+        <span class="absolute top-[65%] right-[20%] text-pink-300 text-2xl floating" style="animation-delay: 3s;">🎀</span>
+        <span class="absolute top-[85%] left-[12%] text-yellow-300 text-3xl floating" style="animation-delay: 2.2s;">✨</span>
+    </div>
+
+    <!-- SECCIÓN 1: BIENVENIDA MÁGICA -->
+    <header class="relative min-h-screen flex flex-col justify-center items-center text-center p-6 z-10">
+        
+        <!-- Corona de Flores del Título (SVG) -->
+        <div class="w-24 h-24 mb-4 floating">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <!-- Círculo de ramitas -->
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#ffbcd0" stroke-width="3" stroke-dasharray="6,4" />
+                <!-- Flores rosadas alrededor -->
+                <circle cx="50" cy="10" r="8" fill="#ff6b9d" />
+                <circle cx="50" cy="10" r="3" fill="#fff3a1" />
+                
+                <circle cx="90" cy="50" r="8" fill="#ff9ebb" />
+                <circle cx="90" cy="50" r="3" fill="#fff3a1" />
+
+                <circle cx="50" cy="90" r="8" fill="#ff6b9d" />
+                <circle cx="50" cy="90" r="3" fill="#fff3a1" />
+
+                <circle cx="10" cy="50" r="8" fill="#ff9ebb" />
+                <circle cx="10" cy="50" r="3" fill="#fff3a1" />
+            </svg>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-bold text-pink-500 font-['Grandstander'] text-3d tracking-wide">
+            ¡MIS 9 AÑOS!
+        </h1>
+        
+        <p class="mt-6 text-xl md:text-2xl text-pink-700 font-medium max-w-xl leading-relaxed">
+            Te invito a un viaje lleno de amor, travesuras y ronroneos en mi <span class="bg-pink-200/50 px-2 py-1 rounded-lg">Parque de Juegos Gatuno</span>. 🐾
+        </p>
+
+        <!-- El Gatito Juguetón Principal (Hecho en SVG interactivo) -->
+        <div class="relative w-64 h-64 mt-8 cursor-pointer group pulse" onclick="playAdorableMeow(event)">
+            <!-- Diálogo de burbuja flotante del gato -->
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white text-pink-600 px-4 py-2 rounded-full shadow-lg border-2 border-pink-200 text-sm font-bold whitespace-nowrap transition-transform duration-300 group-hover:scale-110">
+                ¡Hazme click para un MIAU! 🐱✨
+            </div>
+            
+            <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl">
+                <!-- Orejas -->
+                <polygon points="50,60 25,10 75,40" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="4" stroke-linejoin="round" />
+                <polygon points="55,50 35,20 70,38" fill="#ffccd8" />
+                
+                <polygon points="150,60 175,10 125,40" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="4" stroke-linejoin="round" />
+                <polygon points="145,50 165,20 130,38" fill="#ffccd8" />
+
+                <!-- Cabeza redondita -->
+                <ellipse cx="100" cy="90" rx="65" ry="55" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="4" />
+
+                <!-- Ojos tiernos con brillito -->
+                <ellipse cx="75" cy="85" rx="8" ry="12" fill="#4d323c" />
+                <circle cx="72" cy="80" r="3" fill="#fff" />
+                <circle cx="77" cy="88" r="1.5" fill="#fff" />
+
+                <ellipse cx="125" cy="85" rx="8" ry="12" fill="#4d323c" />
+                <circle cx="122" cy="80" r="3" fill="#fff" />
+                <circle cx="127" cy="88" r="1.5" fill="#fff" />
+
+                <!-- Mejillas sonrosadas (Rubor) -->
+                <ellipse cx="60" cy="100" rx="10" ry="6" fill="#ffccd8" opacity="0.8" />
+                <ellipse cx="140" cy="100" rx="10" ry="6" fill="#ffccd8" opacity="0.8" />
+
+                <!-- Naricita de corazón -->
+                <polygon points="100,100 95,94 105,94" fill="#ff6b9d" />
+                <!-- Boquita tierna (W) -->
+                <path d="M92,103 Q100,111 100,103 Q100,111 108,103" fill="none" stroke="#4d323c" stroke-width="3" stroke-linecap="round" />
+
+                <!-- Bigotes -->
+                <line x1="45" y1="95" x2="15" y2="92" stroke="#ff9ebb" stroke-width="3" stroke-linecap="round" />
+                <line x1="43" y1="103" x2="10" y2="105" stroke="#ff9ebb" stroke-width="3" stroke-linecap="round" />
+
+                <line x1="155" y1="95" x2="185" y2="92" stroke="#ff9ebb" stroke-width="3" stroke-linecap="round" />
+                <line x1="157" y1="103" x2="190" y2="105" stroke="#ff9ebb" stroke-width="3" stroke-linecap="round" />
+
+                <!-- Patitas delanteras asomándose -->
+                <rect x="70" y="135" width="25" height="20" rx="10" fill="#fff" stroke="#ff9ebb" stroke-width="3" />
+                <rect x="105" y="135" width="25" height="20" rx="10" fill="#fff" stroke="#ff9ebb" stroke-width="3" />
+            </svg>
+        </div>
+
+        <!-- Flecha indicando deslizar hacia abajo -->
+        <a href="#detalles" class="mt-12 text-pink-400 hover:text-pink-600 transition-colors duration-300 flex flex-col items-center gap-2">
+            <span class="text-sm font-bold tracking-widest uppercase">Desliza para explorar</span>
+            <i class="fa-solid fa-chevron-down text-2xl animate-bounce"></i>
+        </a>
+    </header>
+
+    <!-- SENDEROS DE HUELLAS: Conectando las secciones de forma fluida -->
+    <div class="relative w-full h-24 pointer-events-none z-10">
+        <svg viewBox="0 0 1440 100" class="w-full h-full fill-none">
+            <path id="footprint-path-1" d="M -20,10 Q 360,90 720,20 T 1460,80" stroke="#ffcbd7" stroke-width="4" stroke-dasharray="10, 15" style="animation: path-dash 20s linear infinite;" />
+        </svg>
+    </div>
+
+    <!-- -->
+    <!-- NUEVA SECCIÓN: ÁLBUM DE FOTOS "EL CAMINO DE MIS TRAVESURAS" -->
+    <section id="album-recuerdos" class="relative py-16 px-6 z-10 max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-pink-400 text-5xl floating inline-block mb-2">🐾</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-pink-600 font-['Grandstander'] text-3d">
+                El Camino de mis Travesuras
+            </h2>
+            <p class="mt-4 text-lg md:text-xl text-pink-700 max-w-2xl mx-auto">
+                ¡Miren cuánto he crecido en estos 9 añitos mágicos! Haz clic en cada fotito para verla en grande. 💖
+            </p>
+        </div>
+
+        <!-- Rejilla de fotos desalineadas orgánicamente estilo Scrapbook colgante -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 px-4">
+            
+            <!-- AÑO 1 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame -rotate-3 w-64" onclick="openPhotoModal('img/1añito.jpeg', '¡Mi primer añito! Mis primeras sonrisas y gateos por toda la casa.')">
+                    <div class="washi-tape bg-pink-300/60"></div>
+                    <!-- Decoración orejas de gato en la esquina -->
+                    <span class="absolute top-2 right-2 text-pink-300 text-lg">🐱</span>
+                    <img src="img/1añito.jpeg" alt="Año 1" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffe6ee/5d464e?text=Foto+1+Año';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-pink-600 text-xl">1 Año</div>
+                    <div class="text-center text-xs text-pink-500 italic mt-1">¡Mi Primer llanto!</div>
+                </div>
+            </div>
+
+            <!-- AÑO 2 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame rotate-2 w-64" onclick="openPhotoModal('img/2añitos.jpeg', '¡A los dos años! Explorando el jardín y persiguiendo mariposas.')">
+                    <div class="washi-tape bg-yellow-200/60" style="transform: translateX(-50%) rotate(4deg);"></div>
+                    <span class="absolute top-2 left-2 text-yellow-400 text-lg">✨</span>
+                    <img src="img/2añitos.jpeg" alt="Año 2" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/fff3a1/5d464e?text=Foto+2+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-amber-600 text-xl">2 Años</div>
+                    <div class="text-center text-xs text-amber-500 italic mt-1">Explorando el mundo</div>
+                </div>
+            </div>
+
+            <!-- AÑO 3 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame -rotate-2 w-64" onclick="openPhotoModal('img/3añitos.jpeg', '¡Tres añitos de amor! Aprendí a cantar mis canciones favoritas sin parar, aparte de mirar feo a papá.')">
+                    <div class="washi-tape bg-cyan-200/60"></div>
+                    <span class="absolute bottom-2 right-2 text-cyan-400 text-lg">🌸</span>
+                    <img src="img/3añitos.jpeg" alt="Año 3" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/e3fafc/5d464e?text=Foto+3+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-cyan-600 text-xl">3 Años</div>
+                    <div class="text-center text-xs text-cyan-500 italic mt-1">¡Hablando sin parar!</div>
+                </div>
+            </div>
+
+            <!-- AÑO 4 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame rotate-3 w-64" onclick="openPhotoModal('img/4añitos.jpeg', '¡Mis 4 añitos! Creando mis primeros dibujos artísticos llenos de color.')">
+                    <div class="washi-tape bg-red-200/60" style="transform: translateX(-50%) rotate(-2deg);"></div>
+                    <span class="absolute top-2 right-2 text-red-300 text-lg">🎈</span>
+                    <img src="img/4añitos.jpeg" alt="Año 4" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffeef2/5d464e?text=Foto+4+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-pink-500 text-xl">4 Años</div>
+                    <div class="text-center text-xs text-pink-400 italic mt-1">Súper traviesa y feliz</div>
+                </div>
+            </div>
+
+            <!-- AÑO 5 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame -rotate-4 w-64" onclick="openPhotoModal('img/5añitos.jpeg', '¡Cinco años! Mi mama estaba super enojada por el desastre que hice en la sala, pero yo solo quería jugar.')">
+                    <div class="washi-tape bg-yellow-300/40"></div>
+                    <span class="absolute bottom-2 left-2 text-yellow-500 text-lg">⭐</span>
+                    <img src="img/5añitos.jpeg" alt="Año 5" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/fff9db/5d464e?text=Foto+5+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-yellow-600 text-xl">5 Años</div>
+                    <div class="text-center text-xs text-yellow-500 italic mt-1">¡Reina Cocinera!</div>
+                </div>
+            </div>
+
+            <!-- AÑO 6 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame rotate-1 w-64" onclick="openPhotoModal('img/6añitos.jpeg', '¡Mis 6 años! Descubriendo libros fantásticos e inventando mis propios cuentos, no saben cuanto me gusta la cueca.')">
+                    <div class="washi-tape bg-green-200/60" style="transform: translateX(-50%) rotate(3deg);"></div>
+                    <span class="absolute top-2 right-3 text-emerald-400 text-lg">🌿</span>
+                    <img src="img/6añitos.jpeg" alt="Año 6" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/e8f5e9/5d464e?text=Foto+6+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-emerald-600 text-xl">6 Años</div>
+                    <div class="text-center text-xs text-emerald-500 italic mt-1">Amante del folclor</div>
+                </div>
+            </div>
+
+            <!-- AÑO 7 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame -rotate-2 w-64" onclick="openPhotoModal('img/7añitos.jpeg', '¡Llegaron los 7! Me volví una experta haciendo manualidades y pulseras de la amistad.')">
+                    <div class="washi-tape bg-purple-200/60"></div>
+                    <span class="absolute top-2 left-2 text-purple-400 text-lg">🦄</span>
+                    <img src="img/7añitos.jpeg" alt="Año 7" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/f3e5f5/5d464e?text=Foto+7+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-purple-600 text-xl">7 Años</div>
+                    <div class="text-center text-xs text-purple-500 italic mt-1">Super creativa y artista</div>
+                </div>
+            </div>
+
+            <!-- AÑO 8 -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame rotate-4 w-64" onclick="openPhotoModal('img/8añitos.jpeg', '¡Mis 8 añitos! No saben Cuanto me encanta la playa y las aventuras al aire libre.')">
+                    <div class="washi-tape bg-orange-200/60" style="transform: translateX(-50%) rotate(-4deg);"></div>
+                    <span class="absolute bottom-2 right-2 text-orange-400 text-lg">✨</span>
+                    <img src="img/8añitos.jpeg" alt="Año 8" class="w-full h-48 object-cover rounded" onerror="this.onerror=null; this.src='https://placehold.co/400x400/fff3e0/5d464e?text=Foto+8+Años';">
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-orange-600 text-xl">8 Años</div>
+                    <div class="text-center text-xs text-orange-500 italic mt-1">¡Aventuras extremas!</div>
+                </div>
+            </div>
+
+            <!-- AÑO 9: CONCURSO DE FOTOGRAFÍA -->
+            <div class="flex flex-col items-center">
+                <div class="polaroid-frame -rotate-3 w-64 border-4 border-yellow-400 bg-yellow-50 hover:bg-yellow-100 transition-colors" onclick="openPhotoModal('https://placehold.co/500x500/fff3a1/5d464e?text=📸+¡Cámara+Lista!', '¡ATENCIÓN PAPARAZZIS GATUNOS! 📸 Tu misión para el año 9 es capturar la foto más divertida o tierna durante la fiesta. Al final del día, el que haya tomado la MEJOR FOTO se llevará un súper premio: ¡3 PEDAZOS DE TORTA EXTRA! 🍰🍰🍰 ¡CORTADOS POR MI SUPER ABUELA GENEROSA, QUE DA UNOS SUPER PEDAZOS! ¡Preparen sus cámaras!')">
+                    <div class="washi-tape bg-yellow-400/80" style="transform: translateX(-50%) rotate(2deg);"></div>
+                    <span class="absolute -top-5 -right-5 text-4xl animate-bounce drop-shadow-md">🏆</span>
+                    
+                    <!-- Diseño de Póster de Concurso -->
+                    <div class="w-full h-48 bg-yellow-200/50 rounded flex items-center justify-center relative overflow-hidden border-2 border-dashed border-yellow-400">
+                        <!-- Brillos de fondo -->
+                        <span class="absolute top-2 left-2 text-yellow-400 text-xl floating">✨</span>
+                        <span class="absolute bottom-4 right-4 text-yellow-500 text-2xl floating" style="animation-delay: 1s;">✨</span>
+                        
+                        <div class="z-10 flex flex-col items-center text-center">
+                            <span class="text-6xl mb-2 filter drop-shadow-lg transform transition-transform hover:scale-110">📸</span>
+                            <span class="bg-yellow-400 text-yellow-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">¡Misión Activa!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4 font-['Grandstander'] font-bold text-amber-600 text-xl">¡Concurso 9 Años!</div>
+                    <div class="text-center text-sm text-amber-600 font-bold mt-1 bg-yellow-200 rounded-full py-1">Premio: 3 Pedazos de Torta 🍰, cortados por la abuela más generosa del mundo</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: DETALLES DE LA CELEBRACIÓN (DISEÑO ORGÁNICO) -->
+    <section id="detalles" class="relative py-20 px-6 z-10 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Bloque de Fecha y Hora interactivo en forma de globo de nubes -->
+            <div class="flex flex-col items-center text-center p-8 bg-white/40 backdrop-blur-md rounded-[50px] border-4 border-dashed border-pink-300 shadow-lg relative overflow-hidden group hover:bg-white/65 transition-all duration-300">
+                <div class="text-6xl mb-4 transform group-hover:scale-125 transition-transform">📅</div>
+                <h3 class="text-3xl font-bold text-pink-600 font-['Grandstander'] mb-2">¿Cuándo nos vemos?</h3>
+                <p class="text-2xl font-bold text-pink-800">Sábado 20 de Junio</p>
+                <p class="text-xl text-pink-700 mt-2 font-medium">A partir de las 17:00 Horas</p>
+                <div class="mt-4 bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-semibold">
+                    ¡No te olvides de venir con calcetines divertidos! 🧦
+                </div>
+            </div>
+
+            <!-- Bloque de Ubicación en forma de nido de juegos -->
+            <div class="flex flex-col items-center text-center p-8 bg-white/40 backdrop-blur-md rounded-[50px] border-4 border-dashed border-pink-300 shadow-lg relative overflow-hidden group hover:bg-white/65 transition-all duration-300">
+                <div class="text-6xl mb-4 transform group-hover:scale-125 transition-transform">📍</div>
+                <h3 class="text-3xl font-bold text-pink-600 font-['Grandstander'] mb-2">¿Dónde es la diversión?</h3>
+                <p class="text-2xl font-bold text-pink-800">Mi Refugio Gatuno</p>
+                <p class="text-lg text-pink-700 mt-1">Ramón Freire Serrano 407<br><span class="text-base font-semibold text-pink-600">San Vicente de Tagua Tagua</span></p>
+                
+                <!-- Botón sutil interactivo para ir al mapa -->
+                <a href="https://share.google/gxOgY3FnICFSOqp9Y" target="_blank" class="mt-6 inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <i class="fa-solid fa-map-location-dot"></i> Ver ubicación en el Mapa
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN INTERACTIVA: JUEGA CON EL GATITO JUGUETÓN -->
+    <section class="relative py-16 px-6 z-10 text-center">
+        <h3 class="text-4xl font-bold text-pink-600 font-['Grandstander'] mb-4 text-3d">¡Dale su juguete favorito!</h3>
+        <p class="text-lg text-pink-700 max-w-md mx-auto mb-8">El gatito está aburrido. Presiona los botones de abajo para enviarle juguetes y ver cómo reacciona.</p>
+
+        <div class="flex justify-center gap-4 flex-wrap max-w-md mx-auto">
+            <button onclick="throwToy('yarn')" class="bg-[#ff8da6] hover:bg-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                🧶 Lanzar Ovillo
+            </button>
+            <button onclick="throwToy('fish')" class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                🐟 Darle un Pescadito
+            </button>
+            <button onclick="throwToy('feather')" class="bg-amber-400 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                🪶 Jugar con Pluma
+            </button>
+        </div>
+
+        <!-- Área de animación de reacción del gatito -->
+        <div class="relative w-80 h-48 mx-auto mt-8 flex items-center justify-center">
+            <!-- Gatito que cambia de pose -->
+            <div id="interactive-cat-box" class="transition-all duration-300 transform scale-100">
+                <!-- SVG del gatito sentado esperando -->
+                <svg id="cat-state-svg" viewBox="0 0 100 100" class="w-32 h-32 mx-auto drop-shadow-md">
+                    <!-- Cuerpo -->
+                    <ellipse cx="50" cy="70" rx="30" ry="25" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                    <!-- Cabeza -->
+                    <ellipse cx="50" cy="40" rx="25" ry="22" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                    <!-- Orejas -->
+                    <polygon points="30,25 20,-2 40,15" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                    <polygon points="70,25 80,-2 60,15" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                    <!-- Ojos contentos -->
+                    <path d="M38,38 Q42,32 46,38" fill="none" stroke="#4d323c" stroke-width="3" stroke-linecap="round" />
+                    <path d="M54,38 Q58,32 62,38" fill="none" stroke="#4d323c" stroke-width="3" stroke-linecap="round" />
+                    <!-- Nariz y boca -->
+                    <polygon points="50,44 48,41 52,41" fill="#ff6b9d" />
+                    <path d="M46,47 Q50,51 50,47 Q50,51 54,47" fill="none" stroke="#4d323c" stroke-width="2" />
+                    <!-- Cola alegre -->
+                    <path d="M75,80 Q95,60 85,45" fill="none" stroke="#ff9ebb" stroke-width="4" stroke-linecap="round" class="origin-bottom" style="animation: float 2s ease-in-out infinite;" />
+                </svg>
+            </div>
+
+            <!-- Div flotante para el juguete lanzado temporalmente -->
+            <div id="flying-toy" class="absolute font-bold text-4xl opacity-0 scale-0 pointer-events-none transition-all duration-700 ease-out">🧶</div>
+        </div>
+
+        <div id="cat-reaction-text" class="text-pink-600 font-bold mt-2 h-6 text-lg">
+            ¡Miauu! El gatito te está esperando... 🐾
+        </div>
+    </section>
+
+    <div class="relative w-full h-24 pointer-events-none z-10">
+        <svg viewBox="0 0 1440 100" class="w-full h-full fill-none">
+            <path d="M 1460,20 Q 1080,80 720,20 T -20,80" stroke="#ffcbd7" stroke-width="4" stroke-dasharray="10, 15" style="animation: path-dash 20s linear infinite reverse;" />
+        </svg>
+    </div>
+
+    <!-- SECCIÓN 3: CUENTA REGRESIVA MAGICA -->
+    <section class="relative py-16 px-6 z-10 text-center max-w-4xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-pink-600 font-['Grandstander'] mb-8 text-3d">¡Falta súper poquito para jugar!</h2>
+        
+        <!-- Bloques flotantes redondos en lugar de tarjetas rígidas -->
+        <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+            <!-- Bloque Días -->
+            <div class="w-28 h-28 md:w-36 md:h-36 bg-[#ffe8ee] border-4 border-pink-300 rounded-full flex flex-col justify-center items-center shadow-lg transform rotate-[-3deg] hover:rotate-[3deg] transition-all duration-300">
+                <span id="days" class="text-3xl md:text-4xl font-bold text-pink-600">00</span>
+                <span class="text-xs md:text-sm font-semibold text-pink-400 uppercase tracking-widest mt-1">Días</span>
+            </div>
+
+            <!-- Bloque Horas -->
+            <div class="w-28 h-28 md:w-36 md:h-36 bg-[#ffecda] border-4 border-amber-300 rounded-full flex flex-col justify-center items-center shadow-lg transform rotate-[4deg] hover:rotate-[-4deg] transition-all duration-300">
+                <span id="hours" class="text-3xl md:text-4xl font-bold text-amber-600">00</span>
+                <span class="text-xs md:text-sm font-semibold text-amber-500 uppercase tracking-widest mt-1">Horas</span>
+            </div>
+
+            <!-- Bloque Minutos -->
+            <div class="w-28 h-28 md:w-36 md:h-36 bg-[#e3fafc] border-4 border-cyan-300 rounded-full flex flex-col justify-center items-center shadow-lg transform rotate-[-2deg] hover:rotate-[2deg] transition-all duration-300">
+                <span id="minutes" class="text-3xl md:text-4xl font-bold text-cyan-600">00</span>
+                <span class="text-xs md:text-sm font-semibold text-cyan-500 uppercase tracking-widest mt-1">Minutos</span>
+            </div>
+
+            <!-- Bloque Segundos (Súper Dinámico) -->
+            <div class="w-28 h-28 md:w-36 md:h-36 bg-[#ffe3e3] border-4 border-red-300 rounded-full flex flex-col justify-center items-center shadow-lg transform rotate-[5deg] hover:rotate-[-5deg] transition-all duration-300 animate-pulse">
+                <span id="seconds" class="text-3xl md:text-4xl font-bold text-red-500">00</span>
+                <span class="text-xs md:text-sm font-semibold text-red-400 uppercase tracking-widest mt-1">Segundos</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4: CONFIRMACIÓN DE ASISTENCIA Y REGALOS -->
+    <footer class="relative py-24 px-6 z-10 text-center flex flex-col items-center">
+        <!-- Gatito asomándose por abajo (SVG) -->
+        <div class="w-48 h-24 overflow-hidden pointer-events-none mb-4">
+            <svg viewBox="0 0 100 50" class="w-full h-full">
+                <!-- Cabeza que asoma -->
+                <ellipse cx="50" cy="50" rx="35" ry="30" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                <polygon points="25,25 15,0 35,15" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                <polygon points="75,25 85,0 65,15" fill="#fcf3f6" stroke="#ff9ebb" stroke-width="3" />
+                <!-- Ojos cerrados felices -->
+                <path d="M35,35 Q40,30 45,35" fill="none" stroke="#4d323c" stroke-width="3" stroke-linecap="round" />
+                <path d="M55,35 Q60,30 65,35" fill="none" stroke="#4d323c" stroke-width="3" stroke-linecap="round" />
+                <!-- Rubor -->
+                <ellipse cx="28" cy="40" rx="6" ry="3" fill="#ffccd8" />
+                <ellipse cx="72" cy="40" rx="6" ry="3" fill="#ffccd8" />
+            </svg>
+        </div>
+
+        <h3 class="text-3xl md:text-4xl font-bold text-pink-600 font-['Grandstander'] mb-4 text-3d">¡Por favor, confirma tu asistencia!</h3>
+        <p class="text-lg text-pink-700 max-w-lg mb-8 font-medium">Así podré preparar suficientes sorpresas y delicias gatunas para todos mis amigos. ¡Te espero!</p>
+
+        <!-- Botón de RSVP estilo burbuja / cojín blando -->
+        <a href="https://wa.me/56958310290?text=%C2%A1Hola!%20S%C3%BAper%20confirmado%20que%20voy%20al%20cumple%20de%209%20gaturro%20%F0%9F%90%BE%F0%9F%8E%82" target="_blank" 
+           class="inline-flex items-center gap-3 bg-gradient-to-r from-[#ff6b9d] to-[#ff8da6] text-white text-2xl font-bold px-12 py-5 rounded-full shadow-[0_10px_25px_rgba(255,107,157,0.4)] hover:shadow-[0_15px_35px_rgba(255,107,157,0.6)] transform hover:-translate-y-1 transition-all duration-300">
+            <i class="fa-solid fa-paper-plane animate-pulse"></i> Confirmar por WhatsApp
+        </a>
+
+        <p class="text-sm text-pink-500 font-semibold italic mt-6">
+            Por favor, confírmame antes del 18 de junio. 💖🐾
+        </p>
+    </footer>
+    
+
+    <div class="fixed bottom-6 left-6 z-50">
+        <button id="music-toggle" onclick="toggleMusic()" class="bg-pink-500 hover:bg-pink-400 text-white w-14 h-14 rounded-full shadow-[0_4px_15px_rgba(255,107,157,0.5)] flex items-center justify-center text-2xl transform transition-transform hover:scale-110 border-4 border-white pulse">
+            <i class="fa-solid fa-music"></i>
+        </button>
+        <audio id="bg-music" loop>
+            <!-- AQUÍ VA EL NOMBRE DE TU CANCIÓN -->
+            <source src="song/cancion1.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- -->
+    <!-- MODAL PARA VER LAS FOTOS EN GRANDE -->
+    <div id="photo-modal" class="fixed inset-0 bg-black/75 z-50 flex flex-col justify-center items-center p-4 opacity-0 pointer-events-none transition-all duration-300" onclick="closePhotoModal()">
+        <button class="absolute top-6 right-6 text-white text-4xl hover:text-pink-300 transition-colors">&times;</button>
+        <div class="relative max-w-lg w-full bg-white p-6 rounded-3xl border-4 border-pink-300 shadow-2xl flex flex-col items-center" onclick="event.stopPropagation()">
+            <!-- Moño de gatito en el modal -->
+            <div class="absolute -top-6 bg-pink-400 text-white font-bold py-1 px-6 rounded-full border-2 border-white shadow-md text-sm">
+                🐈 ¡Bella memoria!
+            </div>
+            <img id="modal-img" src="" alt="Ampliada" class="w-full max-h-[60vh] object-contain rounded-2xl border border-pink-100">
+            <p id="modal-desc" class="mt-4 text-center text-pink-800 text-lg font-medium leading-relaxed"></p>
+            <button onclick="closePhotoModal()" class="mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all">
+                ¡Qué tierna! 🥰
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Control del ovillo de lana siguiendo al mouse
+        const yarnCursor = document.getElementById('yarn-cursor');
+        document.addEventListener('mousemove', (e) => {
+            yarnCursor.style.left = e.clientX + 'px';
+            yarnCursor.style.top = e.clientY + 'px';
+        });
+
+        // Generar efecto de burbuja al hacer click por la pantalla
+        document.addEventListener('click', (e) => {
+            // Evitar que ocurra sobre botones para que no ensucie la acción
+            if (e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('.polaroid-frame')) return;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'click-bubble';
+            bubble.style.left = e.clientX + 'px';
+            bubble.style.top = e.clientY + 'px';
+            document.body.appendChild(bubble);
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 1000);
+        });
+
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggleBtn = document.getElementById('music-toggle');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicToggleBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+                musicToggleBtn.classList.add('pulse');
+            } else {
+                bgMusic.play();
+                musicToggleBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                musicToggleBtn.classList.remove('pulse');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // Iniciar la música automáticamente con el primer clic del usuario en la pantalla
+        document.body.addEventListener('click', function firstClickPlay() {
+            if (!isMusicPlaying) {
+                toggleMusic();
+            }
+            // Eliminamos este listener para que no se ejecute más de una vez
+            document.body.removeEventListener('click', firstClickPlay);
+        }, { once: true });
+
+        //        // Funciones para interactuar con el Modal de fotos
+        function openPhotoModal(imgSrc, textDesc) {
+            const modal = document.getElementById('photo-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalDesc = document.getElementById('modal-desc');
+            
+            modalImg.src = imgSrc;
+            modalDesc.innerText = textDesc;
+            modal.classList.add('modal-active');
+            
+            // Lanzar chispas de corazones cuando abran una foto
+            triggerLoveParticles({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 });
+            
+            // Sonidito alegre para el click
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch(e){}
+        }
+
+        function closePhotoModal() {
+            document.getElementById('photo-modal').classList.remove('modal-active');
+        }
+
+        // Sintetizador Web Audio API: Generación de sonido de gatito de forma dinámica sin URLs
+        function playAdorableMeow(event) {
+            // Efecto visual de corazones flotantes
+            triggerLoveParticles(event);
+
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Un miau adorable de gatito consiste en un tono ascendente rápido y luego una caída suave
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'triangle';
+                
+                // Cambios rápidos de frecuencia para imitar el "miau"
+                const now = ctx.currentTime;
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
+                osc.frequency.exponentialRampToValueAtTime(550, now + 0.35);
+                
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(now + 0.35);
+            } catch (e) {
+                console.log("AudioContext bloqueado o no soportado por este navegador.");
+            }
+        }
+
+        // Lanza una lluvia de corazones y estrellas cuando acarician al gato principal
+        function triggerLoveParticles(event) {
+            const count = 8;
+            const emojis = ['💖', '🐾', '✨', '🎀', '🌸', '😻'];
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'absolute text-2xl pointer-events-none z-50';
+                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                // Posicionar cerca del click, añadiendo dispersión aleatoria
+                const x = event.clientX + (Math.random() * 80 - 40) + window.scrollX;
+                const y = event.clientY + (Math.random() * 80 - 40) + window.scrollY;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                // Estilo animado CSS dinámico para que flote hacia arriba y desaparezca
+                particle.style.transition = 'all 1s ease-out';
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.style.transform = `translateY(-120px) scale(1.5) rotate(${Math.random() * 180 - 90}deg)`;
+                    particle.style.opacity = '0';
+                }, 50);
+                
+                // Eliminar después de terminar la animación
+                setTimeout(() => {
+                    particle.remove();
+                }, 1100);
+            }
+        }
+
+        // Simular lanzar un juguete al gatito interactivo
+        function throwToy(type) {
+            const flyingToy = document.getElementById('flying-toy');
+            const catBox = document.getElementById('interactive-cat-box');
+            const reactionText = document.getElementById('cat-reaction-text');
+            const catSvg = document.getElementById('cat-state-svg');
+
+            let emoji = '🧶';
+            let phrase = '¡El gatito persigue el ovillo feliz!';
+            
+            if (type === 'fish') {
+                emoji = '🐟';
+                phrase = '¡Mmm, qué rico pescadito! *Ñam ñam*';
+            } else if (type === 'feather') {
+                emoji = '🪶';
+                phrase = '¡Saltando a atrapar la pluma! 😻';
+            }
+
+            // Reproducir un sonido de maullido alegre diferente
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            } catch(e){}
+
+            // Animación del juguete que vuela
+            flyingToy.innerText = emoji;
+            flyingToy.style.opacity = '1';
+            flyingToy.style.scale = '1';
+            flyingToy.style.transform = 'translate(-80px, -40px) rotate(360deg)';
+
+            // Reacción física del gatito (pequeño salto)
+            setTimeout(() => {
+                catBox.style.transform = 'translateY(-20px) scale(1.15)';
+                reactionText.innerText = phrase;
+            }, 300);
+
+            // Regreso al estado inicial
+            setTimeout(() => {
+                flyingToy.style.opacity = '0';
+                flyingToy.style.scale = '0';
+                flyingToy.style.transform = 'translate(0px, 0px) rotate(0deg)';
+                catBox.style.transform = 'translateY(0px) scale(1)';
+            }, 1000);
+        }
+
+        // Configurando la cuenta regresiva exacta para el Sábado 20 de Junio de 2026 a las 17:00
+        const targetDate = new Date(2026, 5, 20, 17, 0, 0).getTime(); // Junio es 5 en JS
+
+        const countdownFunction = setInterval(() => {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                clearInterval(countdownFunction);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }, 1000);
+    </script>
+</body>
+</html>
